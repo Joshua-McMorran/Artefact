@@ -9,6 +9,6 @@ trainingSet = dataFile.iloc[:,:]
 
 
 sns.set(style="ticks", color_codes=True)
-data = sns.pairplot(trainingSet)
-
+#data = sns.pairplot(trainingSet)
+data = sns.pairplot(trainingSet, vars =["Standard Deviation", "Homogeneity"])
 plt.show()
