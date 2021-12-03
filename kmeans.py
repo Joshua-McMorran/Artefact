@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
 import csv
 from matplotlib import style
 style.use("ggplot")
@@ -15,7 +14,6 @@ with open('D:\\Josh\\UniversityYear3\\Project\\Dissertation and drafts\\Datasets
             line[pos] = float(line[pos])
         myArray.append(line)
 
-
 dictValues = {Y:[dic[Y] for dic in myArray] for Y in myArray[0]}
 dataClass = np.array(dictValues["Class"])
 
@@ -24,8 +22,6 @@ dataLength = len(X)
 
 kmeans = KMeans(n_clusters=2)
 kmeans.fit(X)
-
-
 
 centroids = kmeans.cluster_centers_
 labels = kmeans.labels_
@@ -49,11 +45,11 @@ for i in range (len(X)):
 
 print("Total postive label:", positiveLable, "Total negative label:", negativeLable)
 print(positiveClass)
-algorithmAccuracy =  positiveClass / positiveLable
-print("The K-means algorithm is this accurate: ",algorithmAccuracy)
+algorithmAccuracy =  positiveLable/positiveClass 
+print("The K-means algorithm is this accurate:",algorithmAccuracy,"%")
 #print("this is positive class total", positiveClass)
 
 
 
 plt.scatter(centroids[:, 0],centroids[:, 1], marker = "x", s=150, linewidths = 5, zorder = 10)
-#plt.show()
+plt.show()
