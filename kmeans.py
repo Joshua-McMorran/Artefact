@@ -18,6 +18,7 @@ dictValues = {Y:[dic[Y] for dic in myArray] for Y in myArray[0]}
 dataClass = np.array(dictValues["Class"])
 
 X = np.column_stack((dictValues["Standard Deviation"], dictValues["ASM"]))
+print(X)
 dataLength = len(X)
 
 kmeans = KMeans(n_clusters=2)
