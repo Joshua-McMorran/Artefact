@@ -17,7 +17,7 @@ with open('D:\\Josh\\UniversityYear3\\Project\\Dissertation and drafts\\Datasets
 dictValues = {Y:[dic[Y] for dic in myArray] for Y in myArray[0]}
 dataClass = np.array(dictValues["Class"])
 
-X = np.column_stack((dictValues["Standard Deviation"], dictValues["ASM"]))
+X = np.column_stack((dictValues["Skewness"], dictValues["Homogeneity"]))
 print(X)
 dataLength = len(X)
 

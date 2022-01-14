@@ -14,7 +14,7 @@ with open('D:\\Josh\\UniversityYear3\\Project\\Dissertation and drafts\\Datasets
 dictValues = {Y:[dic[Y] for dic in myArray] for Y in myArray[0]}
 dataClass = np.array(dictValues["Class"])
 
-X = np.column_stack((dictValues["Standard Deviation"], dictValues["ASM"]))
+X = np.column_stack((dictValues["Energy"], dictValues["Homogeneity"]))
 print(X)
 dataLength = len(X) 
 centers = X
@@ -35,7 +35,6 @@ n_clusters_ = len(labels_unique)
 
 print("number of estimated clusters : %d" % n_clusters_)
 
-# #############################################################################
 # Plot result
 import matplotlib.pyplot as plt
 from itertools import cycle
@@ -43,7 +42,7 @@ from itertools import cycle
 plt.figure(1)
 plt.clf()
 
-colors = cycle("bgrcmykbgrcmykbgrcmykbgrcmyk")
+colors = cycle("mbgrcyk")
 for k, col in zip(range(n_clusters_), colors):
     my_members = labels == k
     cluster_center = cluster_centers[k]
