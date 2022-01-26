@@ -38,16 +38,16 @@ n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
 n_noise_ = list(labels).count(-1)
 
 print("Estimated number of clusters: %d" % n_clusters_)
-# print("Estimated number of noise points: %d" % n_noise_)
-# print("Homogeneity: %0.3f" % metrics.homogeneity_score(labels_true, labels))
-# print("Completeness: %0.3f" % metrics.completeness_score(labels_true, labels))
-# print("V-measure: %0.3f" % metrics.v_measure_score(labels_true, labels))
-# print("Adjusted Rand Index: %0.3f" % metrics.adjusted_rand_score(labels_true, labels))
-# print(
-#     "Adjusted Mutual Information: %0.3f"
-#     % metrics.adjusted_mutual_info_score(labels_true, labels)
-# )
-# print("Silhouette Coefficient: %0.3f" % metrics.silhouette_score(X, labels))
+print("Estimated number of noise points: %d" % n_noise_)
+print("Homogeneity: %0.3f" % metrics.homogeneity_score(labels_true, labels))
+print("Completeness: %0.3f" % metrics.completeness_score(labels_true, labels))
+print("V-measure: %0.3f" % metrics.v_measure_score(labels_true, labels))
+print("Adjusted Rand Index: %0.3f" % metrics.adjusted_rand_score(labels_true, labels))
+print(
+    "Adjusted Mutual Information: %0.3f"
+    % metrics.adjusted_mutual_info_score(labels_true, labels)
+)
+print("Silhouette Coefficient: %0.3f" % metrics.silhouette_score(X, labels))
 
 # Black removed and is used for noise instead.
 unique_labels = set(labels)
@@ -78,6 +78,5 @@ for k, col in zip(unique_labels, colors):
         markeredgecolor="k",
         markersize=6,
     )
-
-# plt.title("Estimated number of clusters: %d" % n_clusters_)
-# plt.show()
+plt.title("Estimated number of clusters: %d" % n_clusters_)
+plt.show()

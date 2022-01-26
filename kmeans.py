@@ -1,3 +1,4 @@
+from pickle import TRUE
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
@@ -52,5 +53,5 @@ print("The K-means algorithm is this accurate:",algorithmAccuracy,"%")
 
 
 
-plt.scatter(centroids[:, 0],centroids[:, 1], marker = "x", s=150, linewidths = 5, zorder = 10)
+plt.scatter(centroids[:, 0],centroids[:, 1], marker = "x", s=180, linewidths = 5.2, zorder = 12)
 plt.show()
