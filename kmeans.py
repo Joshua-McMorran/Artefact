@@ -18,7 +18,7 @@ with open('D:\\Josh\\UniversityYear3\\Project\\Dissertation and drafts\\Datasets
 dictValues = {Y:[dic[Y] for dic in myArray] for Y in myArray[0]}
 dataClass = np.array(dictValues["Class"])
 
-X = np.column_stack((dictValues["Skewness"], dictValues["Homogeneity"]))
+X = np.column_stack((dictValues["Standard Deviation"], dictValues["ASM"]))
 print(X)
 dataLength = len(X)
 
@@ -31,8 +31,9 @@ labels = kmeans.labels_
 colors = ["g.","r.","c.","y."]
 
 for i in range(len(X)):
-    #print("Coordinate:", X[i], "label:", labels[i])
+    print("Coordinate:", X[i], "label:", labels[i])
     plt.plot(X[i][0], X[i][1], colors[labels[i]], markersize = 10) 
+    # if labels && class labels == 1 add
     if (labels[i] == 1): 
         positiveLable+=1
     else:
@@ -47,11 +48,10 @@ for i in range (len(X)):
 
 print("Total postive label:", positiveLable, "Total negative label:", negativeLable)
 print(positiveClass)
+print(negativeClass)
 algorithmAccuracy =  positiveLable/positiveClass 
 print("The K-means algorithm is this accurate:",algorithmAccuracy,"%")
 #print("this is positive class total", positiveClass)
-
-
 
 plt.scatter(centroids[:, 0],centroids[:, 1], marker = "x", s=180, linewidths = 5.2, zorder = 12)
 plt.show()

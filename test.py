@@ -1,29 +1,17 @@
 import numpy as np
-import csv
-from numpy.lib.shape_base import column_stack
 from sklearn.cluster import MeanShift, estimate_bandwidth
 from sklearn.datasets import make_blobs
 
-myArray = []
-with open('D:\\Josh\\UniversityYear3\\Project\\Dissertation and drafts\\Datasets\\BrainTumorCleaned.csv', mode='r') as inp:
-    for line in csv.DictReader(inp):
-        for pos in line:
-            line[pos] = float(line[pos])
-        myArray.append(line)
+# #############################################################################
+# Generate sample data
+centers = [[1, 1], [-1, -1], [1, -1]]
+X, _ = make_blobs(n_samples=10000, centers=centers, cluster_std=0.6)
 
-dictValues = {Y:[dic[Y] for dic in myArray] for Y in myArray[0]}
-dataClass = np.array(dictValues["Class"])
-
-X = np.column_stack((dictValues["Energy"], dictValues["Homogeneity"]))
-print(X)
-dataLength = len(X) 
-centers = X
-X, _ = make_blobs(n_samples=dataLength, centers=centers, cluster_std=0.6)
-
+# #############################################################################
 # Compute clustering with MeanShift
 
-# The following bandwidth can be automatically detected using 0.2 original value
-bandwidth = estimate_bandwidth(X, quantile=0.2, n_samples=dataLength)
+# The following bandwidth can be automatically detected using
+bandwidth = estimate_bandwidth(X, quantile=0.2, n_samples=500)
 
 ms = MeanShift(bandwidth=bandwidth, bin_seeding=True)
 ms.fit(X)
@@ -35,6 +23,7 @@ n_clusters_ = len(labels_unique)
 
 print("number of estimated clusters : %d" % n_clusters_)
 
+# #############################################################################
 # Plot result
 import matplotlib.pyplot as plt
 from itertools import cycle
@@ -42,7 +31,7 @@ from itertools import cycle
 plt.figure(1)
 plt.clf()
 
-colors = cycle("mbgrcyk")
+colors = cycle("bgrcmykbgrcmykbgrcmykbgrcmyk")
 for k, col in zip(range(n_clusters_), colors):
     my_members = labels == k
     cluster_center = cluster_centers[k]

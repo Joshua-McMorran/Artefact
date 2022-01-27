@@ -1,12 +1,12 @@
 import numpy as np
 import csv
-from sklearn.cluster import MeanShift
+from numpy.lib.shape_base import column_stack
+from sklearn.cluster import MeanShift, estimate_bandwidth
 from sklearn.datasets import make_blobs
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib import style
-style.use("ggplot")
 
+# Plot result
+import matplotlib.pyplot as plt
+from itertools import cycle
 
 myArray = []
 with open('D:\\Josh\\UniversityYear3\\Project\\Dissertation and drafts\\Datasets\\BrainTumorCleaned.csv', mode='r') as inp:
@@ -18,40 +18,43 @@ with open('D:\\Josh\\UniversityYear3\\Project\\Dissertation and drafts\\Datasets
 dictValues = {Y:[dic[Y] for dic in myArray] for Y in myArray[0]}
 dataClass = np.array(dictValues["Class"])
 
-X = np.column_stack((dictValues["Standard Deviation"], dictValues["ASM"]))
-dataLength = len(X)
+X = np.column_stack(( dictValues["Homogeneity"], dictValues["Entropy"]))
+#print("This is X\n", X)
 
-centers = [[1,1,1],[5,5,5],[3,10,10]]
+dataLength = len(X) 
+centers = X
+Z, _ = make_blobs(n_samples=dataLength, centers=centers, cluster_std=0.6)
+# Compute clustering with MeanShift
 
-X, _ = make_blobs(n_samples = dataLength, centers = centers, cluster_std = 1.5)
+# The following bandwidth can be automatically detected using 0.2 original value
+bandwidth = estimate_bandwidth(Z, quantile=0.09, n_samples=dataLength)
 
-
-
-ms = MeanShift()
-ms.fit(X)
+ms = MeanShift(bandwidth=bandwidth, bin_seeding=True)
+ms.fit(Z)
+print("This is K\n",Z)
 labels = ms.labels_
+print("This is labels\n", labels)
 cluster_centers = ms.cluster_centers_
 
-print(cluster_centers)
+labels_unique = np.unique(labels)
+n_clusters_ = len(labels_unique)
 
-n_clusters_ = len(np.unique(labels))
+#print("number of estimated clusters : %d" % n_clusters_)
+plt.figure(1)
+plt.clf()
 
-print("Number of estimated clusters:", n_clusters_)
-
-colors = 10*['r','g','b','c','k','y','m']
-
-print(colors)
-print(labels)
-
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-
-for i in range(len(X)):
-
-    ax.scatter(X[i][0], X[i][1], X[i][2], c=colors[labels[i]], marker='o')
-
-
-ax.scatter(cluster_centers[:,0],cluster_centers[:,1],cluster_centers[:,2],
-            marker="x",color='k', s=150, linewidths = 5, zorder=10)
-
+colors = cycle("mbgrcyk")
+for k, col in zip(range(n_clusters_), colors):
+    my_members = labels == k
+    cluster_center = cluster_centers[k]
+    plt.plot(Z[my_members, 0], Z[my_members, 1], col + ".")
+    plt.plot(
+        cluster_center[0],
+        cluster_center[1],
+        "o",
+        markerfacecolor=col,
+        markeredgecolor="k",
+        markersize=8.5,
+    )
+plt.title("Estimated number of clusters: %d" % n_clusters_)
 plt.show()
