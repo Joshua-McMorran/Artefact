@@ -31,27 +31,28 @@ kmeans.fit(X)
 centroids = kmeans.cluster_centers_
 labels = kmeans.labels_
 
-colors = [" g.","r.","c.","y."]
-
-for i in range(len(X)):
-    plt.plot(X[i][0], X[i][1], colors[labels[i]], markersize = 10) 
+for i in range (len(X)):
     if (labels[i] and dataClass[i] == 1):        
         positiveLable+=1
     else:
         negativeLable+=1
 
-for i in range (len(X)):
     if (dataClass[i]==1):
         positiveClass+=1
     else:
         negativeClass+=1
 
-
 totalAccuracy = positiveLable/positiveClass
 
-print("Postive label = \n", positiveLable)
-print("Postive Class = \n", positiveClass)
-print("Total accuracy = \n", totalAccuracy)
+print("Postive label = ", positiveLable)
+print("Postive Class = ", positiveClass)
+print("Total accuracy = ", totalAccuracy)
+
+
+colors = [" g.","r.","c.","y."]
+
+for i in range(len(X)):
+    plt.plot(X[i][0], X[i][1], colors[labels[i]], markersize = 10) 
 
 #plt.scatter(centroids[:, 0],centroids[:, 1], marker = "x", s=180, linewidths = 5.2, zorder = 12)
 #plt.show()
