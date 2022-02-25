@@ -28,6 +28,8 @@ dataLength = len(X)
 kmeans = KMeans(n_clusters=2, random_state = 100)
 kmeans.fit(X)
 
+print("Kmeans inertia = ",kmeans.inertia_)
+
 centroids = kmeans.cluster_centers_
 labels = kmeans.labels_
 

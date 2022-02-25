@@ -1,13 +1,9 @@
 import numpy as np
 import csv
+import matplotlib.pyplot as plt
 from numpy.lib.shape_base import column_stack
 from sklearn.cluster import MeanShift, estimate_bandwidth
 from sklearn.datasets import make_blobs
-
-# Plot result
-import matplotlib.pyplot as plt
-from itertools import cycle
-
 
 positiveLable, negativeLable , positiveClass, totalAccuracy, incorrectLabel = 0,0,0,0,0
 
@@ -21,16 +17,15 @@ with open('D:\\Josh\\UniversityYear3\\Project\\Dissertation and drafts\\Datasets
 dictValues = {Y:[dic[Y] for dic in myArray] for Y in myArray[0]}
 dataClass = np.array(dictValues["Class"])
 
-X = np.column_stack((dictValues["Mean"],dictValues["ASM"], dictValues["Standard Deviation"], dictValues["Energy"],dictValues["Variance"]))
+X = np.column_stack((dictValues["Energy"],dictValues["Mean"],dictValues["ASM"], dictValues["Standard Deviation"],dictValues["Variance"]))
 
 dataLength = len(X) 
 centers = X
-Z, _ = make_blobs(n_samples=dataLength, centers=centers, cluster_std=0.6)
-
+Z, _ = make_blobs(n_samples=dataLength, centers=X, cluster_std=0.6)
 
 # Compute clustering with MeanShift
 # The following bandwidth can be automatically detected using 0.2 original value
-bandwidth = estimate_bandwidth(Z, quantile=0.09, n_samples=dataLength)
+bandwidth = estimate_bandwidth(Z, quantile=0.08, n_samples=dataLength)
 
 ms = MeanShift(bandwidth=bandwidth, bin_seeding=True)
 ms.fit(Z)
@@ -59,6 +54,7 @@ print("Postive Class = ", positiveClass)
 print("Total accuracy = ", totalAccuracy)
 print("Label inaccuracy = ", incorrectLabel)
 
+'''
 #print("number of estimated clusters : %d" % n_clusters_)
 plt.figure(1)
 plt.clf()
@@ -78,3 +74,4 @@ for k, col in zip(range(n_clusters_), colors):
     )
 plt.title("Estimated number of clusters: %d" % n_clusters_)
 plt.show()
+'''

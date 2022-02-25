@@ -14,21 +14,26 @@ with open('D:\\Josh\\UniversityYear3\\Project\\Dissertation and drafts\\Datasets
             line[pos] = float(line[pos])
         myArray.append(line)
 
-#dataClass = np.array(dictValues["Class"])
-dictValues = {Y:[dic[Y] for dic in myArray] for Y in myArray[0]}
 
-Y = np.column_stack((dictValues["Homogeneity"], dictValues["ASM"]))
+dictValues = {Y:[dic[Y] for dic in myArray] for Y in myArray[0]}
+dataClass = np.array(dictValues["Class"])
+
+
+#X = np.column_stack((dictValues["Variance"],dictValues["Energy"],dictValues["Mean"],dictValues["ASM"], dictValues["Standard Deviation"]))
+X = np.column_stack((dictValues["Variance"],dictValues["Energy"]))
+
+dataLength = len(X) 
+
 
 X, labels_true = make_blobs(
-    n_samples=750, centers=Y, cluster_std=0.4, random_state=0
+    n_samples=750, centers=X, cluster_std=0.4, random_state=0
 )
-
 
 X = StandardScaler().fit_transform(X)
 
 print(X)
 # Compute DBSCAN
-db = DBSCAN(eps=0.3, min_samples=10).fit(X)
+db = DBSCAN(eps=100.0, min_samples=dataLength).fit(X)
 core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
 core_samples_mask[db.core_sample_indices_] = True
 labels = db.labels_
@@ -37,7 +42,9 @@ labels = db.labels_
 n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
 n_noise_ = list(labels).count(-1)
 
-print("Estimated number of clusters: %d" % n_clusters_)
+print("Labels =  ", labels)
+
+""" print("Estimated number of clusters: %d" % n_clusters_)
 print("Estimated number of noise points: %d" % n_noise_)
 print("Homogeneity: %0.3f" % metrics.homogeneity_score(labels_true, labels))
 print("Completeness: %0.3f" % metrics.completeness_score(labels_true, labels))
@@ -48,7 +55,11 @@ print(
     % metrics.adjusted_mutual_info_score(labels_true, labels)
 )
 print("Silhouette Coefficient: %0.3f" % metrics.silhouette_score(X, labels))
+ """
 
+
+
+'''
 # Black removed and is used for noise instead.
 unique_labels = set(labels)
 colors = [plt.cm.Spectral(each) for each in np.linspace(0, 1, len(unique_labels))]
@@ -80,3 +91,4 @@ for k, col in zip(unique_labels, colors):
     )
 plt.title("Estimated number of clusters: %d" % n_clusters_)
 plt.show()
+'''
