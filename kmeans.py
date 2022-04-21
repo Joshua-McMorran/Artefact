@@ -30,34 +30,30 @@ print("actual label count = ", dataLength)
 #Creating dictonary to store all accuracy of hyperparameter tuning
 allAccuracysDict = dict()
 
-currentValue = 0
 
-for i in range (10):
+for i in range (50):
 
-    kmeans = KMeans(n_clusters=2, random_state = 3)
+    kmeans = KMeans(n_clusters=2, random_state = i, n_init = i+1, tol=i)
     kmeans.fit(X)
     #print("random state = ", kmeans.random_state)
     centroids = kmeans.cluster_centers_
     labels = kmeans.labels_
-    #print("Kmeans lables", labels)
-    #print("all labels", dataClass)
-
-    for i in range (len(X)):
+    for j in range (len(X)):
         #Check for matching Kmeans data to CVS data
-        if labels[i] == 1 and dataClass[i] == 1:        
+        if labels[j] == 1 and dataClass[j] == 1:        
             accurateLabel+=1    
-        elif labels[i] == 0 and dataClass[i] == 0:
+        elif labels[j] == 0 and dataClass[j] == 0:
             accurateLabel+=1
-        elif labels[i]>1:
+        elif labels[j]>1:
             falsePositive+=1
 
         #Sum up CVS
-        if (dataClass[i]==1):
+        if (dataClass[j]==1):
             positiveClass+=1
         else:
             negativeClass+=1
         #sum up Kmeans Data
-        if (labels[i]==1):
+        if (labels[j]==1):
             totalPosLabel+=1
         else:
             totalNegLabel+=1
@@ -66,13 +62,9 @@ for i in range (10):
     totalAccuracy = totalAccuracy*100
 
     totalLabels = totalNegLabel + totalPosLabel
-    # print("Total label = ", totalLabels)
-    # print("accurate label = ", accurateLabel)
-    # print("Postive Class = ", positiveClass)
-    # print("Total accuracy =", totalAccuracy, "%")
-    # print("Total false Positive = ", falsePositive)
 
-    allAccuracysDict[kmeans.random_state] = totalAccuracy
+    #Adding into the dictornary
+    allAccuracysDict[i] = totalAccuracy
 
     #clearing values to allow for rerun of loop
     accurateLabel = 0
@@ -99,7 +91,7 @@ for key in allAccuracysDict:
 
 #writing to file the highest values of current loop
 f  = open ("KmeansAccuracy.txt", "w")
-f.write("Kmeans acccuray(s) = " + str(highestAccuracyDict))
+f.write("Kmeans best acccuray(s) = " + str(highestAccuracyDict))
 print("Highest accuracy is  = ", highestAccuracyDict)      
 
 
