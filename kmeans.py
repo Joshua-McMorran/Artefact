@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 from matplotlib import style
+from sklearn import metrics
 style.use("ggplot")
 from sklearn.cluster import KMeans
 
@@ -10,7 +11,7 @@ accurateLabel, positiveClass, negativeClass, totalAccuracy, falsePositive, total
 
 #CSV to Dictonary
 myArray = []
-with open('D:\\Josh\\UniversityYear3\\Project\\Dissertation and drafts\\Datasets\\BrainTumorCleaned.csv', mode='r') as inp:
+with open('D:\\Josh\\UniversityYear3\\Project\\Dissertation and drafts\\Datasets\\BreastCancer_cleaned.csv', mode='r') as inp:
     for line in csv.DictReader(inp):
         for pos in line:
             line[pos] = float(line[pos])
@@ -18,11 +19,25 @@ with open('D:\\Josh\\UniversityYear3\\Project\\Dissertation and drafts\\Datasets
 
 dictValues = {Y:[dic[Y] for dic in myArray] for Y in myArray[0]}
 dataClass = np.array(dictValues["Class"])
-#print("dic", dictValues)
+
+#Housing datat training dataset
+#HousingData_cleaned.csv
+#X = np.column_stack((dictValues["bathrooms"],dictValues["sqft_living"],dictValues["sqft_lot"],dictValues["floors"],dictValues["grade"],
+#                      dictValues["yr_built"],dictValues["sqft_living15"],dictValues["condition"]))
+
+#Brain turmour training dataset
+#BrainTumorCleaned.csv
 #X = np.column_stack((dictValues["Standard Deviation"], dictValues["ASM"],dictValues["Energy"], dictValues["Homogeneity"],
 #                    dictValues["Mean"],dictValues["Dissimilarity"],dictValues["Variance"]))
+#Breast cancer training dataset
+#BreastCancer_cleaned.csv
+#X = np.column_stack((dictValues["radius_mean"], dictValues["texture_mean"],dictValues["perimeter_mean"], dictValues["area_mean"],
+#                   dictValues["radius_worst"],dictValues["texture_worst"],dictValues["perimeter_worst"],dictValues["area_worst"]))
 
-X = np.column_stack((dictValues["Variance"],dictValues["Homogeneity"],dictValues["ASM"], dictValues["Standard Deviation"], dictValues["Energy"], dictValues["Entropy"]))
+
+
+X = np.column_stack((dictValues["Price"],dictValues["sqft_living"],dictValues["sqft_lot"],dictValues["floors"],dictValues["condition"],
+                      dictValues["yr_built"],dictValues["sqft_living15"],dictValues["condition"]))
 
 dataLength = len(X)
 print("actual label count = ", dataLength)
@@ -31,9 +46,12 @@ print("actual label count = ", dataLength)
 allAccuracysDict = dict()
 
 
-for i in range (50):
-
-    kmeans = KMeans(n_clusters=2, random_state = i, n_init = i+1, tol=i)
+for i in range (100):
+    #(n_clusters=2, random_state = 15, max_iter=275, n_init=20) - brain tumour
+    #(n_clusters=2, random_state=100, max_iter=800, n_init= 1) - breast cancer
+    kmeans = KMeans(n_clusters=11, random_state=30, max_iter=553, n_init= 3)
+   
+   
     kmeans.fit(X)
     #print("random state = ", kmeans.random_state)
     centroids = kmeans.cluster_centers_
@@ -63,6 +81,7 @@ for i in range (50):
 
     totalLabels = totalNegLabel + totalPosLabel
 
+
     #Adding into the dictornary
     allAccuracysDict[i] = totalAccuracy
 
@@ -89,17 +108,30 @@ for key in allAccuracysDict:
     elif allAccuracysDict[key] == highestAccuracy:
         highestAccuracyDict[key] = allAccuracysDict[key]
 
+lowestAccuracy = 0
+lowestAccuracyDict = dict()
+for key in allAccuracysDict:
+    if allAccuracysDict[key] < highestAccuracy:
+        lowestAccuracyDict.clear()
+        lowestAccuracyDict[key] = allAccuracysDict[key]
+        lowestAccuracy = allAccuracysDict[key]
+    elif allAccuracysDict[key] == lowestAccuracy:
+        lowestAccuracyDict[key] = allAccuracysDict[key]
+
+
 #writing to file the highest values of current loop
-f  = open ("KmeansAccuracy.txt", "w")
+f  = open ("KmeansHighestAccuracy.txt", "w")
 f.write("Kmeans best acccuray(s) = " + str(highestAccuracyDict))
-print("Highest accuracy is  = ", highestAccuracyDict)      
+print("Highest accuracy is  = ", highestAccuracyDict)
 
+print("\n")
 
+f  = open ("KmeansLowestAccuracy.txt", "w")
+f.write("Kmeans lowest acccuray(s) = " + str(lowestAccuracyDict))
+print("Lowest accuracy is  = ", lowestAccuracyDict)
 
+print("\n")
 
-# colors = ("mbgrcyk")
-# for i in range(len(X)):
-#    plt.plot(X[i][0], X[i][1], colors[labels[i]], markersize = 10) 
-
-# plt.scatter(centroids[:, 0],centroids[:, 1], marker = "x", s=180, linewidths = 5.2, zorder = 12)
-# plt.show()
+f = open ("KmeansAllAccuracys.txt", "w")
+f.write("All Accuracys = " + str(allAccuracysDict))
+print("All Accuracys = ", allAccuracysDict)
