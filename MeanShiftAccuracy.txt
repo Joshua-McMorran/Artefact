@@ -1,1 +1,1 @@
-MeanShift best acccuray(s) = {99: 0.17574692442882248}
+MeanShift best acccuray(s) = {9: 0.0}

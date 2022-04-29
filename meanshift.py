@@ -1,65 +1,66 @@
+from pickle import TRUE
 import numpy as np
 import csv
 import matplotlib.pyplot as plt
 from numpy.lib.shape_base import column_stack
+from sklearn import cluster
 from sklearn.cluster import MeanShift, estimate_bandwidth
 from sklearn.datasets import make_blobs
 
 accurateLabel, positiveClass, negativeClass, totalAccuracy, falsePositive, totalPosLabel, totalNegLabel, totalLabels = 0,0,0,0,0,0,0,0
 
 myArray = []
-with open('D:\\Josh\\UniversityYear3\\Project\\Dissertation and drafts\\Datasets\\BreastCancer_cleaned.csv', mode='r') as inp:
+with open('D:\\Josh\\UniversityYear3\\Project\\Dissertation and drafts\\Datasets\\HousingData_cleaned.csv', mode='r') as inp:
     for line in csv.DictReader(inp):
         for pos in line:
             line[pos] = float(line[pos])
         myArray.append(line)
 
 dictValues = {Y:[dic[Y] for dic in myArray] for Y in myArray[0]}
-dataClass = np.array(dictValues["Class"])
+dataClass = np.array(dictValues["condition"])
 
-#X = np.column_stack((dictValues["radius_mean"], dictValues["texture_mean"],dictValues["perimeter_mean"], dictValues["area_mean"],
-#                   dictValues["radius_worst"],dictValues["texture_worst"],dictValues["perimeter_worst"],dictValues["area_worst"]))
+X = np.column_stack((dictValues["Price"],dictValues["sqft_living"],dictValues["sqft_lot"],dictValues["floors"],dictValues["condition"],
+                      dictValues["yr_built"],dictValues["sqft_living15"], dictValues["bedrooms"]))
 
 #Breast cancer training dataset
 #BreastCancer_cleaned.csv
 #X = np.column_stack((dictValues["radius_mean"], dictValues["texture_mean"],dictValues["perimeter_mean"], dictValues["area_mean"],
 #                   dictValues["radius_worst"],dictValues["texture_worst"],dictValues["perimeter_worst"],dictValues["area_worst"]))
-
-
-X = np.column_stack((dictValues["radius_mean"], dictValues["texture_mean"],dictValues["perimeter_mean"], dictValues["area_mean"],
-                        dictValues["radius_worst"],dictValues["texture_worst"],dictValues["perimeter_worst"],dictValues["area_worst"]))
+#X = np.column_stack((dictValues["radius_mean"], dictValues["texture_mean"],dictValues["perimeter_mean"], dictValues["area_mean"],
+#                        dictValues["radius_worst"],dictValues["texture_worst"],dictValues["perimeter_worst"],dictValues["area_worst"]))
 
 dataLength = len(X) 
 
-for i in range(100):
-
-
-
+for i in range(10):
+    print(i)
     # Compute clustering with MeanShift
-    # The following bandwidth can be automatically detected using 0.2 original value
-    bandwidth = estimate_bandwidth(X, quantile=0.99, n_samples=dataLength)
-    ms = MeanShift( bandwidth=bandwidth, bin_seeding=True, max_iter=250)
+    # The following bandwidth can be automatically
+    bandwidth = estimate_bandwidth(X, quantile=0.9, n_samples=dataLength)
+    ms = MeanShift( bandwidth= bandwidth, max_iter= 300, bin_seeding=TRUE, cluster_all=TRUE)
     ms.fit(X)
     labels = ms.labels_
     cluster_centers = ms.cluster_centers_
-
     labels_unique = np.unique(labels)
     n_clusters_ = len(labels_unique)
-
+    
 
     allAccuracysDict = dict()
 
 
     for j in range (len(X)):
-        #Check for matching Kmeans data to CVS data
+        #Check for matching mean-shift data to CVS data
         if labels[j] == 1 and dataClass[j] == 1:        
-            accurateLabel+=1   
-        elif labels[j] == 0 and dataClass[j] == 0:
+            accurateLabel+=1    
+        elif labels[j] == 0 and dataClass[j] == 2:
             accurateLabel+=1
+        elif labels[j] == 2 and dataClass[j] == 3:        
+            accurateLabel+=1    
+        elif labels[j] == 3 and dataClass[j] == 4:
+            accurateLabel+=1
+        elif labels[j] == 3 and dataClass[j] == 5:
+            accurateLabel+=1 
         elif labels[j]>1:
             falsePositive+=1
-
-
         #Sum up CVS
         if (dataClass[j]==1):
             positiveClass+=1

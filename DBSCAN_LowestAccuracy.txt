@@ -1,1 +1,1 @@
-DBSCAN lowest acccuray(s) = {}
+DBSCAN lowest acccuray(s) = {9: 0.0}

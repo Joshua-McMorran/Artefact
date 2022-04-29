@@ -1,1 +1,1 @@
-DBSCAN best acccuray(s) = {0: 0.026581605528973953}
+DBSCAN best acccuray(s) = {9: 0.0}

@@ -11,34 +11,34 @@ from sklearn.preprocessing import StandardScaler
 accurateLabel, positiveClass, negativeClass, totalAccuracy, falsePositive, totalPosLabel, totalNegLabel, totalLabels = 0,0,0,0,0,0,0,0
 
 myArray = []
-with open('D:\\Josh\\UniversityYear3\\Project\\Dissertation and drafts\\Datasets\\BrainTumorCleaned.csv', mode='r') as inp:
+with open('D:\\Josh\\UniversityYear3\\Project\\Dissertation and drafts\\Datasets\\HousingData_cleaned.csv', mode='r') as inp:
     for line in csv.DictReader(inp):
         for pos in line:
             line[pos] = float(line[pos])
         myArray.append(line)
 
-
 dictValues = {Y:[dic[Y] for dic in myArray] for Y in myArray[0]}
-dataClass = np.array(dictValues["Class"])
+dataClass = np.array(dictValues["condition"])
 
 # dataClass = np.array(dictValues["condition"])
-# X = np.column_stack((dictValues["price"],dictValues["bedrooms"],dictValues["bathrooms"],dictValues["sqft_living"],dictValues["sqft_lot"],dictValues["floors"],dictValues["grade"],dictValues["sqft_above"],dictValues["yr_built"],dictValues["lat"],dictValues["long"],dictValues["sqft_living15"],dictValues["sqft_lot15"]))
 
-X = np.column_stack((dictValues["Variance"],dictValues["Homogeneity"],dictValues["ASM"], dictValues["Standard Deviation"], dictValues["Energy"], dictValues["Entropy"]))
+X = np.column_stack((dictValues["Price"],dictValues["sqft_living"],dictValues["sqft_lot"],dictValues["floors"],dictValues["condition"],
+                      dictValues["yr_built"],dictValues["sqft_living15"], dictValues["bedrooms"]))
+
+#X = np.column_stack((dictValues["Variance"],dictValues["Homogeneity"],dictValues["ASM"], dictValues["Standard Deviation"], dictValues["Energy"], dictValues["Entropy"]))
 
 print("This is X",X.shape)
 
 dataLength = len(X) 
 
 X = StandardScaler().fit_transform(X)
-k = 0.1
-for i in range(1):
+for i in range(10):
 
     allAccuracysDict = dict()
     #min_samples =15
     # Compute DBSCAN
-
-    db = DBSCAN(eps = 0.7, min_samples= 320).fit(X)
+    print(i)
+    db = DBSCAN(eps = 4.8, min_samples= 5+i).fit(X)
     core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
     core_samples_mask[db.core_sample_indices_] = True
     labels = db.labels_
@@ -46,18 +46,22 @@ for i in range(1):
     # Number of clusters in labels, ignoring noise if present.
     n_clusters_ = len(set(labels))
     #print("min smaples = ",db.min_samples)
-    print("number of clusters =",n_clusters_)
     
 
     for j in range (len(X)):
         #Check for matching Kmeans data to CVS data
         if labels[j] == 1 and dataClass[j] == 1:        
-            accurateLabel+=1   
-        elif labels[j] == 0 and dataClass[j] == 0:
+            accurateLabel+=1    
+        elif labels[j] == 0 and dataClass[j] == 2:
             accurateLabel+=1
+        elif labels[j] == 2 and dataClass[j] == 3:        
+            accurateLabel+=1    
+        elif labels[j] == 3 and dataClass[j] == 4:
+            accurateLabel+=1
+        elif labels[j] == 3 and dataClass[j] == 5:
+            accurateLabel+=1 
         elif labels[j]>1:
             falsePositive+=1
-
         #Sum up CVS
         if (dataClass[j]==1):
             positiveClass+=1
